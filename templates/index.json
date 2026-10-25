@@ -103,19 +103,36 @@
     },
     "clothing_rack_DCVQ8N": {
       "type": "clothing-rack",
+      "blocks": {
+        "item_bbcHif": {
+          "type": "item",
+          "settings": {
+            "product": "oversized-whithe-rf-1001"
+          }
+        },
+        "item_FbwdR7": {
+          "type": "item",
+          "settings": {
+            "product": "oversized-black-rf1002"
+          }
+        }
+      },
+      "block_order": [
+        "item_bbcHif",
+        "item_FbwdR7"
+      ],
       "name": "Clothing rack",
       "settings": {
         "color_scheme": "",
         "separate_section_with_border": false,
         "subheading": "",
         "heading": "",
-        "collection": "rack-tendency",
-        "products_to_show": 7,
         "rail_color": "#b5b7ba",
         "cta_text": "See availability",
         "show_view_toggle": true,
         "front_label": "Front",
         "back_label": "Back",
+        "hover_hint": "Hover a garment to see it face-on",
         "show_marquee": true,
         "marquee_text": "IT'S US, NEVER THEM  •  NEW DROPS  •  LAGOS  •",
         "marquee_background": "#39ff14",
