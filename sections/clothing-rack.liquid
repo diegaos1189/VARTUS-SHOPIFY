@@ -156,10 +156,9 @@
     }
 
     {%- comment -%}
-      Resting pose (side view) is the normal-flow image for every item.
-      The centered/active item (scroll-spotlight) automatically swaps to
-      the front (or back) product shot and pops forward; hovering or
-      focusing ANY item (active or not) previews front/back the same way.
+      The Front/Back toggle sets which image is the baseline for every
+      item. Hovering or focusing a single item temporarily flips it to
+      the other side, independent of the other garments.
     {%- endcomment -%}
     #shopify-section-{{ section.id }} .rack-item__image--front,
     #shopify-section-{{ section.id }} .rack-item__image--back {
@@ -169,31 +168,31 @@
       transition: opacity 0.3s ease;
     }
 
-    #shopify-section-{{ section.id }} .rack-item__image--side {
-      transition: opacity 0.3s ease;
-    }
-
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item.is-active .rack-item__image--side,
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--side,
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--side {
-      opacity: 0;
-    }
-
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item.is-active .rack-item__image--front,
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--front,
-    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--front {
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__image--front {
       opacity: 1;
     }
 
-    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item.is-active .rack-item__image--side,
-    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--side,
-    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--side {
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__image--back {
+      opacity: 1;
+    }
+
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--front,
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--front {
       opacity: 0;
     }
 
-    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item.is-active .rack-item__image--back,
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--back,
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--back {
+      opacity: 1;
+    }
+
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--back,
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--back {
+      opacity: 0;
+    }
+
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--front,
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--front {
       opacity: 1;
     }
 
@@ -324,22 +323,22 @@
                 continue
               endif
 
-              assign side_image = product.images[0]
-              assign front_image = product.images[1] | default: side_image
-              assign back_image = product.images[2] | default: front_image
+              if block.settings.first_image_role == 'back'
+                assign back_image = product.images[0]
+                assign front_image = product.images[1] | default: back_image
+              else
+                assign front_image = product.images[0]
+                assign back_image = product.images[1] | default: front_image
+              endif
             -%}
             <div class="rack-item {% if forloop.first %}is-active{% endif %}" data-rack-item {{ block.shopify_attributes }}>
               <button type="button" class="rack-item__hanger" data-rack-trigger aria-label="{{ product.title | escape }}">
                 <span class="rack-item__hook" aria-hidden="true"></span>
                 <span class="rack-item__image-wrapper">
-                  {%- if side_image != blank -%}
-                    {{- side_image | image_url: width: side_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', alt: side_image.alt | default: product.title, class: 'rack-item__image rack-item__image--side' -}}
-                  {%- else -%}
-                    {{- 'product-1' | placeholder_svg_tag: 'rack-item__image rack-item__image--side' -}}
-                  {%- endif -%}
-
                   {%- if front_image != blank -%}
                     {{- front_image | image_url: width: front_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', alt: front_image.alt | default: product.title, class: 'rack-item__image rack-item__image--front' -}}
+                  {%- else -%}
+                    {{- 'product-1' | placeholder_svg_tag: 'rack-item__image rack-item__image--front' -}}
                   {%- endif -%}
 
                   {%- if back_image != blank -%}
@@ -534,7 +533,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Each product needs 3 images in this order: 1) side (resting pose, shown by default), 2) front, 3) back. Upload transparent PNGs so they blend into the rack background."
+      "content": "Each product needs 2 images: front and back. Set which one is image 1 per garment below. Upload transparent PNGs so they blend into the rack background."
     },
     {
       "type": "checkbox",
@@ -558,7 +557,7 @@
       "type": "text",
       "id": "hover_hint",
       "label": "Hover hint text",
-      "default": "Hover a garment to see it face-on"
+      "default": "Hover a garment to flip it"
     },
     {
       "type": "header",
@@ -608,7 +607,17 @@
           "type": "product",
           "id": "product",
           "label": "Product",
-          "info": "Image order on the product: 1) side, 2) front, 3) back."
+          "info": "Upload exactly 2 images on this product: front and back."
+        },
+        {
+          "type": "select",
+          "id": "first_image_role",
+          "label": "Image 1 is",
+          "options": [
+            { "value": "front", "label": "Front" },
+            { "value": "back", "label": "Back" }
+          ],
+          "default": "front"
         }
       ]
     }
