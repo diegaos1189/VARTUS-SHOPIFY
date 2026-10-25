@@ -1,0 +1,34 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  VARTUS PICTURE
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Thin wrapper around image_url/image_tag shared by the Vartus editorial sections, so every floating/product image gets
+  the same responsive widths, CLS-safe sizing and lazy-loading behaviour.
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * image: the image object to render (required; nothing is output when blank)
+  * class: optional class(es) applied to the <img>
+  * sizes: optional sizes attribute (defaults to a full-bleed-ish guess)
+  * widths: optional comma list of widths to generate (defaults to a sensible editorial range)
+  * loading: "eager" or "lazy" (default "lazy")
+  * fetchpriority: "high", "low" or "auto"
+  * alt_fallback: text used when the image has no alt text (e.g. product.title)
+{%- endcomment -%}
+
+{%- if image != blank -%}
+  {{-
+    image
+    | image_url: width: image.width
+    | image_tag:
+      loading: loading | default: 'lazy',
+      fetchpriority: fetchpriority,
+      widths: widths | default: '300,450,600,800,1000,1200,1600',
+      sizes: sizes | default: '(max-width: 749px) 90vw, 40vw',
+      alt: image.alt | default: alt_fallback,
+      class: class
+  -}}
+{%- endif -%}

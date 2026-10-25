@@ -1,0 +1,692 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  VARTUS EDITORIAL PRODUCT EXPERIENCE
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Scroll-driven, sticky product scenes. One block = one product scene (no carousel, no autoplay, no Swiper). GSAP +
+  ScrollTrigger are lazy-loaded from a CDN ESM build the first time this element connects, scoped to this custom
+  element only (nothing is attached to window besides a single cached module promise so repeated sections/instances,
+  and Shopify Editor re-renders, don't reload the library). Pinning uses native `position: sticky` rather than
+  ScrollTrigger's pin option, which keeps things simpler and avoids pin-spacer edge cases in a buildless theme.
+  ----------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+  assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5
+  assign scene_count = 0
+  for block in section.blocks
+    if block.settings.product != blank or block.settings.image_primary != blank
+      assign scene_count = scene_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if scene_count > 0 -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --vartus-scene-vh-desktop: {{ section.settings.section_height_desktop }}vh;
+      --vartus-scene-vh-mobile: {{ section.settings.section_height_mobile }}vh;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial {
+      display: block;
+      position: relative;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__track {
+      position: relative;
+      height: calc(var(--vartus-scene-vh-mobile) * {{ scene_count }});
+    }
+
+    @media (min-width: 750px) {
+      #shopify-section-{{ section.id }} .vartus-editorial__track {
+        height: calc(var(--vartus-scene-vh-desktop) * {{ scene_count }});
+      }
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__viewport {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      color: var(--scene-fg, #000);
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__scene[data-theme="dark"] {
+      --scene-fg: #fff;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__scene[data-theme="light"] {
+      --scene-fg: #000;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__scene.is-active {
+      pointer-events: auto;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__scene:first-child {
+      opacity: 1;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__media-group {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: scale(var(--scene-scale, 1)) rotate(var(--scene-rotation, 0deg));
+      transform-origin: center;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__image {
+      position: absolute;
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__image--primary {
+      width: clamp(220px, 32vw, 460px);
+      aspect-ratio: 3 / 4;
+      top: 50%;
+      left: 50%;
+      transform: translate(calc(-50% + var(--scene-offset-x, 0px)), calc(-50% + var(--scene-offset-y, 0px)));
+      box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+      z-index: 2;
+    }
+
+    #shopify-section-{{ section.id }} [data-layout="left"] .vartus-editorial__image--primary { left: 28%; }
+    #shopify-section-{{ section.id }} [data-layout="right"] .vartus-editorial__image--primary { left: 72%; }
+    #shopify-section-{{ section.id }} [data-layout="split"] .vartus-editorial__image--primary { left: 32%; }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__image--secondary {
+      width: clamp(120px, 16vw, 230px);
+      aspect-ratio: 3 / 4;
+      top: 14%;
+      left: 10%;
+      z-index: 1;
+    }
+
+    #shopify-section-{{ section.id }} [data-layout="right"] .vartus-editorial__image--secondary,
+    #shopify-section-{{ section.id }} [data-layout="split"] .vartus-editorial__image--secondary {
+      left: auto;
+      right: 8%;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__image--detail {
+      width: clamp(90px, 12vw, 160px);
+      aspect-ratio: 1;
+      bottom: 12%;
+      right: 12%;
+      z-index: 3;
+      box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.25);
+    }
+
+    #shopify-section-{{ section.id }} [data-layout="right"] .vartus-editorial__image--detail {
+      right: auto;
+      left: 10%;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__content {
+      position: relative;
+      z-index: 4;
+      max-width: min(30ch, 70vw);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6em;
+      padding: 0 clamp(1.25rem, 5vw, 4rem);
+    }
+
+    #shopify-section-{{ section.id }} [data-layout="centered"] .vartus-editorial__content {
+      margin: 0 auto;
+      text-align: center;
+      align-items: center;
+    }
+
+    #shopify-section-{{ section.id }} [data-layout="right"] .vartus-editorial__content {
+      margin-left: auto;
+      text-align: right;
+      align-items: flex-end;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__eyebrow {
+      margin: 0;
+      font-size: clamp(0.7rem, 1vw, 0.85rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__title {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 7rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__subtitle {
+      margin: 0;
+      font-size: clamp(0.85rem, 1vw, 1rem);
+      opacity: 0.85;
+      max-width: 36ch;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__meta {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-top: 0.4em;
+    }
+
+    #shopify-section-{{ section.id }} .vartus-editorial__index {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      opacity: 0.6;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 749px) {
+      #shopify-section-{{ section.id }} .vartus-editorial__scene {
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      #shopify-section-{{ section.id }} .vartus-editorial__image--secondary,
+      #shopify-section-{{ section.id }} .vartus-editorial__image--detail {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .vartus-editorial__image--primary {
+        position: relative;
+        inset: auto;
+        width: 66vw;
+        margin: 0 auto;
+        top: auto;
+        left: auto;
+        transform: none;
+      }
+
+      #shopify-section-{{ section.id }} .vartus-editorial__content {
+        text-align: center;
+        align-items: center;
+        margin: 0 auto;
+        max-width: 90vw;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .vartus-editorial__track {
+        height: auto;
+      }
+
+      #shopify-section-{{ section.id }} .vartus-editorial__viewport {
+        position: static;
+        height: auto;
+      }
+
+      #shopify-section-{{ section.id }} .vartus-editorial__scene {
+        position: relative;
+        opacity: 1;
+        min-height: 80svh;
+      }
+    }
+  </style>
+
+  <vartus-editorial-experience
+    class="vartus-editorial section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}"
+    data-scene-count="{{ scene_count }}"
+    data-intensity="{{ section.settings.global_intensity | default: 50 | divided_by: 100.0 }}"
+  >
+    <div class="vartus-editorial__track" data-track>
+      <div class="vartus-editorial__viewport">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign product = block.settings.product
+            assign title = block.settings.custom_title | default: product.title
+            assign link = block.settings.custom_link | default: product.url
+            assign primary_image = block.settings.image_primary | default: product.featured_image
+            if primary_image == blank and product == blank
+              continue
+            endif
+
+            assign primary_loading = 'lazy'
+            if forloop.first
+              assign primary_loading = 'eager'
+            endif
+          -%}
+          <section
+            class="vartus-editorial__scene {% if forloop.first %}is-active{% endif %}"
+            data-scene
+            data-scene-index="{{ forloop.index0 }}"
+            data-layout="{{ block.settings.layout | default: 'left' }}"
+            data-theme="{{ block.settings.theme | default: 'light' }}"
+            style="--scene-scale: {{ block.settings.scale | default: 100 | divided_by: 100.0 }}; --scene-rotation: {{ block.settings.rotation | default: 0 }}deg; --scene-offset-x: {{ block.settings.offset_x | default: 0 }}px; --scene-offset-y: {{ block.settings.offset_y | default: 0 }}px; --scene-intensity: {{ block.settings.animation_intensity | default: 50 | divided_by: 100.0 }};"
+            {{ block.shopify_attributes }}
+          >
+            <div class="vartus-editorial__media-group">
+              {%- if primary_image != blank -%}
+                <div class="vartus-editorial__image vartus-editorial__image--primary" data-layer="primary">
+                  {%- render 'vartus-picture', image: primary_image, loading: primary_loading, sizes: '(max-width: 749px) 66vw, 32vw', alt_fallback: title -%}
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.image_secondary != blank -%}
+                <div class="vartus-editorial__image vartus-editorial__image--secondary" data-layer="secondary">
+                  {%- render 'vartus-picture', image: block.settings.image_secondary, sizes: '16vw', alt_fallback: title -%}
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.image_detail != blank -%}
+                <div class="vartus-editorial__image vartus-editorial__image--detail" data-layer="detail">
+                  {%- render 'vartus-picture', image: block.settings.image_detail, sizes: '12vw', alt_fallback: title -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="vartus-editorial__content" data-layer="content">
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="vartus-editorial__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.show_product_title and title != blank -%}
+                <h2 class="vartus-editorial__title">{{ title }}</h2>
+              {%- endif -%}
+
+              {%- if block.settings.subtitle != blank -%}
+                <p class="vartus-editorial__subtitle">{{ block.settings.subtitle }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.show_price and product != blank -%}
+                {%- render 'price-list', product: product, context: 'card' -%}
+              {%- endif -%}
+
+              <div class="vartus-editorial__meta">
+                {%- if block.settings.show_cta and link != blank -%}
+                  {%- render 'button', href: link, content: 'sections.shop_the_look.view_product' | t, style: 'outline' -%}
+                {%- endif -%}
+
+                {%- if block.settings.show_index -%}
+                  <p class="vartus-editorial__index">{{ block.settings.index | default: forloop.index | prepend: '00' | slice: -3, 3 }} / {{ scene_count | prepend: '00' | slice: -3, 3 }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          </section>
+        {%- endfor -%}
+      </div>
+    </div>
+  </vartus-editorial-experience>
+
+  <script type="module">
+    let gsapModulePromise;
+
+    function loadGSAP() {
+      if (!gsapModulePromise) {
+        gsapModulePromise = Promise.all([
+          import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm'),
+          import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js/+esm')
+        ]).then(([gsapModule, scrollTriggerModule]) => {
+          const gsap = gsapModule.gsap || gsapModule.default;
+          const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
+          gsap.registerPlugin(ScrollTrigger);
+          return { gsap, ScrollTrigger };
+        });
+      }
+      return gsapModulePromise;
+    }
+
+    window.__vartusLoadGSAP = window.__vartusLoadGSAP || loadGSAP;
+
+    class VartusEditorialExperience extends HTMLElement {
+      connectedCallback() {
+        if (this.__initialized) return;
+        this.__initialized = true;
+        this.init();
+      }
+
+      disconnectedCallback() {
+        this.destroy();
+        this.__initialized = false;
+      }
+
+      async init() {
+        this.track = this.querySelector('[data-track]');
+        this.scenes = Array.from(this.querySelectorAll('[data-scene]'));
+        this.triggers = [];
+        if (!this.track || this.scenes.length === 0) return;
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reducedMotion) {
+          this.scenes.forEach((scene) => scene.classList.add('is-active'));
+          return;
+        }
+
+        const { gsap, ScrollTrigger } = await window.__vartusLoadGSAP();
+        if (!this.isConnected) return;
+
+        this.gsap = gsap;
+        this.ScrollTrigger = ScrollTrigger;
+        this.createScenes();
+        this.bindEvents();
+      }
+
+      createScenes() {
+        const { gsap, ScrollTrigger } = this;
+        const total = this.scenes.length;
+
+        this.scenes.forEach((scene, index) => {
+          const intensity = parseFloat(scene.style.getPropertyValue('--scene-intensity')) || 0.5;
+          const primary = scene.querySelector('[data-layer="primary"]');
+          const secondary = scene.querySelector('[data-layer="secondary"]');
+          const detail = scene.querySelector('[data-layer="detail"]');
+          const content = scene.querySelector('[data-layer="content"]');
+
+          const tl = gsap.timeline({ paused: true });
+
+          tl.fromTo(scene, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0)
+            .to(scene, { opacity: 1, duration: 0.6 }, 0.2)
+            .to(scene, { opacity: 0, duration: 0.2 }, 0.8);
+
+          if (primary) {
+            tl.fromTo(primary, { y: () => 40 * intensity, scale: 0.94 }, { y: () => -40 * intensity, scale: 1, duration: 1, ease: 'none' }, 0);
+          }
+
+          if (secondary) {
+            tl.fromTo(secondary, { y: () => -60 * intensity }, { y: () => 60 * intensity, duration: 1, ease: 'none' }, 0);
+          }
+
+          if (detail) {
+            tl.fromTo(detail, { rotate: -4 * intensity, y: () => 30 * intensity }, { rotate: 4 * intensity, y: () => -30 * intensity, duration: 1, ease: 'none' }, 0);
+          }
+
+          if (content) {
+            tl.fromTo(content, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.25 }, 0.05)
+              .to(content, { opacity: 1, y: 0, duration: 0.5 }, 0.3)
+              .to(content, { opacity: 0, y: -16, duration: 0.2 }, 0.8);
+          }
+
+          const start = index / total;
+          const end = (index + 1) / total;
+
+          const trigger = ScrollTrigger.create({
+            trigger: this.track,
+            start: () => `${start * 100}% top`,
+            end: () => `${end * 100}% top`,
+            scrub: true,
+            animation: tl,
+            onUpdate: (self) => {
+              scene.classList.toggle('is-active', self.progress > 0 && self.progress < 1);
+            }
+          });
+
+          this.triggers.push(trigger);
+        });
+      }
+
+      bindEvents() {
+        this.onDesignModeSelect = () => this.ScrollTrigger && this.ScrollTrigger.refresh();
+        document.addEventListener('shopify:section:select', this.onDesignModeSelect);
+        document.addEventListener('shopify:block:select', this.onDesignModeSelect);
+        this.onResize = () => this.ScrollTrigger && this.ScrollTrigger.refresh();
+        window.addEventListener('resize', this.onResize);
+      }
+
+      destroy() {
+        this.triggers.forEach((trigger) => trigger.kill());
+        this.triggers = [];
+        if (this.onDesignModeSelect) {
+          document.removeEventListener('shopify:section:select', this.onDesignModeSelect);
+          document.removeEventListener('shopify:block:select', this.onDesignModeSelect);
+        }
+        if (this.onResize) window.removeEventListener('resize', this.onResize);
+      }
+    }
+
+    if (!customElements.get('vartus-editorial-experience')) {
+      customElements.define('vartus-editorial-experience', VartusEditorialExperience);
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vartus editorial experience",
+  "class": "shopify-section--vartus-editorial-experience",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "section_height_desktop",
+      "label": "Scene height (desktop)",
+      "min": 100,
+      "max": 220,
+      "step": 10,
+      "unit": "vh",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Scene height (mobile)",
+      "min": 80,
+      "max": 160,
+      "step": 10,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "global_intensity",
+      "label": "Global parallax intensity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "scene",
+      "name": "Product scene",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Images (optional overrides)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_primary",
+          "label": "Primary image",
+          "info": "Falls back to the product's featured image."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_secondary",
+          "label": "Secondary image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_detail",
+          "label": "Detail image"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom title",
+          "info": "Falls back to the product title."
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Custom link",
+          "info": "Falls back to the product page."
+        },
+        {
+          "type": "text",
+          "id": "index",
+          "label": "Index label",
+          "info": "e.g. 1 for \"001 / 006\". Defaults to the scene's position."
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" },
+            { "value": "centered", "label": "Centered" },
+            { "value": "split", "label": "Split" },
+            { "value": "asymmetric", "label": "Asymmetric" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "theme",
+          "label": "Theme",
+          "options": [
+            { "value": "light", "label": "Light text" },
+            { "value": "dark", "label": "Dark text" }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "range",
+          "id": "scale",
+          "label": "Image scale",
+          "min": 70,
+          "max": 130,
+          "step": 5,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "rotation",
+          "label": "Image rotation",
+          "min": -15,
+          "max": 15,
+          "step": 1,
+          "unit": "deg",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "offset_x",
+          "label": "Horizontal offset",
+          "min": -200,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "offset_y",
+          "label": "Vertical offset",
+          "min": -200,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "animation_intensity",
+          "label": "Animation intensity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_product_title",
+          "label": "Show title",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show price",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_index",
+          "label": "Show index label",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_cta",
+          "label": "Show button",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vartus editorial experience",
+      "category": "Collection",
+      "blocks": [
+        { "type": "scene" },
+        { "type": "scene" },
+        { "type": "scene" }
+      ]
+    }
+  ]
+}
+{% endschema %}
