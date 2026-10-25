@@ -62,6 +62,7 @@
     #shopify-section-{{ section.id }} .clothing-rack__track {
       display: flex;
       align-items: flex-start;
+      min-height: calc(var(--rack-item-width) * 1.8);
       overflow-x: auto;
       overflow-y: visible;
       scroll-snap-type: x proximity;
@@ -103,44 +104,39 @@
       align-items: center;
       width: 100%;
       cursor: pointer;
-      transform: rotate(var(--rack-item-tilt, 0deg)) scale(var(--rack-item-scale, 0.92));
+      transform: scale(1);
       transform-origin: top center;
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
-      filter: brightness(0.94);
-    }
-
-    #shopify-section-{{ section.id }} .rack-item:nth-child(odd) .rack-item__hanger {
-      --rack-item-tilt: -3deg;
-    }
-
-    #shopify-section-{{ section.id }} .rack-item:nth-child(even) .rack-item__hanger {
-      --rack-item-tilt: 3deg;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
     }
 
     #shopify-section-{{ section.id }} .rack-item.is-active .rack-item__hanger {
-      --rack-item-tilt: 0deg;
-      --rack-item-scale: 1.15;
-      filter: brightness(1);
+      transform: scale(1.55);
       z-index: 2;
     }
 
     #shopify-section-{{ section.id }} .rack-item__hook {
       display: block;
       width: 2px;
-      height: 16px;
+      height: 14px;
       background: #6b4a2f;
       border-radius: 1px;
+      transition: opacity 0.3s ease;
     }
 
     #shopify-section-{{ section.id }} .rack-item__hook::after {
       content: '';
       display: block;
-      width: 20px;
-      height: 10px;
+      width: 16px;
+      height: 8px;
       margin: -2px auto 0;
       border: 2px solid #6b4a2f;
       border-top: none;
-      border-radius: 0 0 10px 10px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item.is-active .rack-item__hook {
+      opacity: 0;
     }
 
     #shopify-section-{{ section.id }} .rack-item__image-wrapper {
@@ -160,9 +156,10 @@
     }
 
     {%- comment -%}
-      Resting pose (side view) is the normal-flow image. Front/back are
-      absolutely stacked on top and only revealed on hover/focus, so the
-      item always hangs "sideways" until a shopper inspects it.
+      Resting pose (side view) is the normal-flow image for every item.
+      The centered/active item (scroll-spotlight) automatically swaps to
+      the front (or back) product shot and pops forward; hovering or
+      focusing ANY item (active or not) previews front/back the same way.
     {%- endcomment -%}
     #shopify-section-{{ section.id }} .rack-item__image--front,
     #shopify-section-{{ section.id }} .rack-item__image--back {
@@ -176,21 +173,25 @@
       transition: opacity 0.3s ease;
     }
 
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item.is-active .rack-item__image--side,
     #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--side,
     #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--side {
       opacity: 0;
     }
 
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item.is-active .rack-item__image--front,
     #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--front,
     #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--front {
       opacity: 1;
     }
 
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item.is-active .rack-item__image--side,
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--side,
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--side {
       opacity: 0;
     }
 
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item.is-active .rack-item__image--back,
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--back,
     #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--back {
       opacity: 1;
