@@ -107,13 +107,15 @@
         "item_bbcHif": {
           "type": "item",
           "settings": {
-            "product": "oversized-whithe-rf-1001"
+            "product": "oversized-whithe-rf-1001",
+            "first_image_role": "front"
           }
         },
         "item_FbwdR7": {
           "type": "item",
           "settings": {
-            "product": "oversized-black-rf1002"
+            "product": "oversized-black-rf1002",
+            "first_image_role": "front"
           }
         }
       },
@@ -146,7 +148,7 @@
         "collection-1": {
           "type": "collection",
           "settings": {
-            "collection": "frontpage",
+            "collection": "rack-tendency",
             "products_count": 12,
             "title": "Piezas para rotar toda la semana",
             "link_url": "",
