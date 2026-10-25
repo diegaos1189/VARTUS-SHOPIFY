@@ -11,20 +11,6 @@
   "type": "footer",
   "name": "Footer group",
   "sections": {
-    "newsletter_JU4dMC": {
-      "type": "newsletter",
-      "settings": {
-        "color_scheme": "scheme-3",
-        "separate_section_with_border": true,
-        "image_size": "auto",
-        "subheading": "Entra al circulo",
-        "title": "Drop alerts y acceso antes que todos",
-        "content": "<p>Nuevos lanzamientos y novedades de Vartus Studio. S? parte de la comunidad.</p>",
-        "button_text": "Unirme",
-        "overlay_color": "#000000",
-        "overlay_opacity": 0
-      }
-    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -33,21 +19,31 @@
           "settings": {
             "menu": "footer",
             "show_menu_title": true,
-            "menu_title": ""
+            "menu_title": "Explora"
           }
         },
         "text": {
           "type": "text",
           "settings": {
             "title": "<strong>VARTUS STUDIO</strong>",
-            "content": "<p>Streetwear con identidad propia. Siluetas, detalles y una forma de vestir que habla por ti.</p>",
-            "enable_follow_on_shop": true
+            "content": "<p>Streetwear con identidad propia.<br>Siluetas y detalles que hablan por ti.</p>",
+            "enable_follow_on_shop": false
+          }
+        },
+        "newsletter_vartus": {
+          "type": "newsletter",
+          "settings": {
+            "title": "Forma parte de Vartus",
+            "content": "<p>Recibe novedades y nuevos lanzamientos.</p>",
+            "button_background": "#f5f1eb",
+            "button_text_color": "#121212"
           }
         }
       },
       "block_order": [
+        "text",
         "links",
-        "text"
+        "newsletter_vartus"
       ],
       "settings": {
         "color_scheme": "scheme-3",
@@ -62,7 +58,6 @@
     }
   },
   "order": [
-    "newsletter_JU4dMC",
     "footer"
   ]
 }

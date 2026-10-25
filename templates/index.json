@@ -284,18 +284,6 @@
         "button_text": "Leer mas"
       }
     },
-    "section_divider_FmHGwD": {
-      "type": "section-divider",
-      "settings": {
-        "shape": "waves_3",
-        "flip_horizontal": false,
-        "flip_vertical": false,
-        "shape_color": "accent-1",
-        "background_color": "background-1",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
     "impact_text_vartus": {
       "type": "impact-text",
       "disabled": true,
@@ -325,7 +313,6 @@
     "impact_text_vartus",
     "collection-list",
     "1743988062a82d2af0",
-    "blog-posts",
-    "section_divider_FmHGwD"
+    "blog-posts"
   ]
 }
