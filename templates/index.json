@@ -104,6 +104,13 @@
     "clothing_rack_DCVQ8N": {
       "type": "clothing-rack",
       "blocks": {
+        "item_Ah4a3A": {
+          "type": "item",
+          "settings": {
+            "product": "oversized-marron-rf1003",
+            "first_image_role": "front"
+          }
+        },
         "item_bbcHif": {
           "type": "item",
           "settings": {
@@ -120,6 +127,7 @@
         }
       },
       "block_order": [
+        "item_Ah4a3A",
         "item_bbcHif",
         "item_FbwdR7"
       ],
