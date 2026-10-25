@@ -1,0 +1,397 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  VARTUS HERO
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Editorial, asymmetric hero: a floating primary image, an optional smaller detail image, a large display title and an
+  optional "001 / 006" style index. Reuses the theme's color_scheme + font_picker system and the 'media' snippet so
+  images/video are handled exactly like the rest of the theme (responsive widths, lazy/eager loading, CLS-safe sizing).
+  ----------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+  assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5
+  assign has_media = false
+  if section.settings.video != blank or section.settings.image != blank
+    assign has_media = true
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} .vartus-hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__media img,
+  #shopify-section-{{ section.id }} .vartus-hero__media video,
+  #shopify-section-{{ section.id }} .vartus-hero__media video-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, {{ section.settings.scrim_opacity | divided_by: 100.0 }}), transparent 55%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__detail {
+    position: absolute;
+    z-index: 2;
+    width: clamp(90px, 16vw, 220px);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.25);
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__detail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__detail--bottom-end {
+    right: clamp(1rem, 6vw, 6rem);
+    bottom: clamp(7rem, 14vw, 11rem);
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__detail--top-start {
+    left: clamp(1rem, 6vw, 6rem);
+    top: clamp(5rem, 12vw, 9rem);
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 clamp(1.25rem, 4vw, 4rem) clamp(2.5rem, 6vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__content--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__content--end {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__eyebrow {
+    font-size: clamp(0.7rem, 1vw, 0.85rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__title {
+    margin: 0;
+    font-size: clamp(3rem, 9vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    max-width: 20ch;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__subtitle {
+    margin: 0;
+    max-width: 42ch;
+    font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+    opacity: 0.9;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__footer {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    margin-top: clamp(0.5rem, 1.5vw, 1rem);
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__index {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #shopify-section-{{ section.id }} .vartus-hero__eyebrow,
+  #shopify-section-{{ section.id }} .vartus-hero__title,
+  #shopify-section-{{ section.id }} .vartus-hero__subtitle,
+  #shopify-section-{{ section.id }} .vartus-hero__footer {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__eyebrow,
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__title,
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__subtitle,
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__footer {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__eyebrow { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__title { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__subtitle { transition-delay: 0.3s; }
+  #shopify-section-{{ section.id }}[data-vartus-hero-ready] .vartus-hero__footer { transition-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .vartus-hero__eyebrow,
+    #shopify-section-{{ section.id }} .vartus-hero__title,
+    #shopify-section-{{ section.id }} .vartus-hero__subtitle,
+    #shopify-section-{{ section.id }} .vartus-hero__footer {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<div
+  class="vartus-hero color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}"
+  data-vartus-hero
+  {% if section.settings.allow_transparent_header %}allow-transparent-header{% endif %}
+>
+  {%- if has_media -%}
+    <div class="vartus-hero__media">
+      {%- if section.settings.video != blank -%}
+        {%- render 'media', media: section.settings.video, autoplay: true, loop: true, controls: false, preload: true, class: 'hidden sm:block' -%}
+        {%- if section.settings.image_mobile != blank -%}
+          {{- section.settings.image_mobile | image_url: width: section.settings.image_mobile.width | image_tag: loading: 'eager', fetchpriority: 'high', widths: '400,600,800,1000,1200', sizes: '100vw', class: 'sm:hidden' -}}
+        {%- else -%}
+          {%- render 'media', media: section.settings.video, autoplay: true, loop: true, controls: false, preload: true, class: 'sm:hidden' -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- if section.settings.image_mobile != blank -%}
+          {{- section.settings.image | image_url: width: section.settings.image.width | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600,900,1200,1600,1920,2400', sizes: '100vw', class: 'hidden sm:block' -}}
+          {{- section.settings.image_mobile | image_url: width: section.settings.image_mobile.width | image_tag: loading: 'eager', fetchpriority: 'high', widths: '400,600,800,1000,1200', sizes: '100vw', class: 'sm:hidden' -}}
+        {%- else -%}
+          {{- section.settings.image | image_url: width: section.settings.image.width | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600,900,1200,1600,1920,2400', sizes: '100vw' -}}
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="vartus-hero__media">
+      {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' | replace: '<svg', '<svg preserveAspectRatio="xMinYMin slice"' -}}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.detail_image != blank -%}
+    <div class="vartus-hero__detail vartus-hero__detail--{{ section.settings.detail_position }}">
+      {{- section.settings.detail_image | image_url: width: section.settings.detail_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500', sizes: '220px' -}}
+    </div>
+  {%- endif -%}
+
+  <div class="vartus-hero__content vartus-hero__content--{{ section.settings.content_position }}">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="vartus-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="vartus-hero__title">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="vartus-hero__subtitle">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.cta_text != blank or section.settings.show_index -%}
+      <div class="vartus-hero__footer">
+        {%- if section.settings.cta_text != blank -%}
+          {%- render 'button', href: section.settings.cta_link, content: section.settings.cta_text, style: 'outline', background: section.settings.text_color, text_color: section.settings.text_color -%}
+        {%- endif -%}
+
+        {%- if section.settings.show_index -%}
+          <p class="vartus-hero__index">{{ section.settings.index_current }} / {{ section.settings.index_total }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+
+    const reveal = () => root.setAttribute('data-vartus-hero-ready', '');
+
+    if (document.readyState === 'complete') {
+      requestAnimationFrame(reveal);
+    } else {
+      window.addEventListener('load', () => requestAnimationFrame(reveal), { once: true });
+    }
+
+    if (window.Shopify && Shopify.designMode) {
+      root.addEventListener('shopify:section:select', reveal);
+      root.addEventListener('shopify:section:unload', () => root.removeAttribute('data-vartus-hero-ready'));
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Vartus hero",
+  "class": "shopify-section--vartus-hero",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "scrim_opacity",
+      "label": "Bottom scrim opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 45
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "t:global.section.allow_transparent_header",
+      "info": "t:global.section.allow_transparent_header_info",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image (mobile)",
+      "info": "Optional. Falls back to the desktop image."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Optional. Overrides the desktop image when set. Muted, autoplay, loop."
+    },
+    {
+      "type": "header",
+      "content": "Detail image"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_image",
+      "label": "Floating detail image"
+    },
+    {
+      "type": "select",
+      "id": "detail_position",
+      "label": "Detail position",
+      "options": [
+        { "value": "top-start", "label": "Top start" },
+        { "value": "bottom-end", "label": "Bottom end" }
+      ],
+      "default": "bottom-end"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "VARTUS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built to transcend"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Right" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_index",
+      "label": "Show index label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "index_current",
+      "label": "Current index",
+      "default": "001"
+    },
+    {
+      "type": "text",
+      "id": "index_total",
+      "label": "Total index",
+      "default": "006"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vartus hero",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
