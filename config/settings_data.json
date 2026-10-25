@@ -35,7 +35,6 @@
     "discount_mode": "percentage",
     "cart_show_free_shipping_bar": true,
     "cart_free_shipping_threshold": "149900",
-    "favicon": "shopify://shop_images/logo_kz.png",
     "show_page_transition": true,
     "product_card_text_casing": "inherit",
     "content_for_index": [],
@@ -84,7 +83,8 @@
           "circle_button_icon": "#1c1c1c"
         }
       }
-    }
+    },
+    "brand_name": "VARTUS STUDIO"
   },
   "presets": {
     "Allure": {
@@ -144,32 +144,32 @@
       "product_sold_out_badge_background": "#efefef",
       "product_custom_badge_background": "#1c1c1c"
     },
-    "Couture": {
-      "section_vertical_spacing": "md",
+    "Vogue": {
+      "section_vertical_spacing": "xs",
       "heading_font": "jost_n4",
       "heading_letter_spacing": 18,
-      "text_font": "poppins_n4",
+      "text_font": "jost_n4",
       "text_font_size_desktop": 14,
       "button_letter_spacing": 18,
       "color_schemes": {
         "scheme-1": {
           "settings": {
             "background": "#ffffff",
-            "text_color": "#5c5c5c",
-            "primary_button_background": "#5c5c5c",
-            "primary_button_text_color": "#ffffff",
-            "circle_button_background": "#ffffff",
-            "circle_button_icon": "#1c1c1c"
+            "text_color": "#303030",
+            "primary_button_background": "#f5db8b",
+            "primary_button_text_color": "#303030",
+            "circle_button_background": "#1c1c1c",
+            "circle_button_icon": "#f5db8b"
           }
         },
         "scheme-2": {
           "settings": {
-            "background": "#f3f3f3",
-            "text_color": "#5c5c5c",
-            "primary_button_background": "#5c5c5c",
-            "primary_button_text_color": "#ffffff",
-            "circle_button_background": "#ffffff",
-            "circle_button_icon": "#5c5c5c"
+            "background": "#ffffff",
+            "text_color": "#303030",
+            "primary_button_background": "#f5db8b",
+            "primary_button_text_color": "#303030",
+            "circle_button_background": "#1c1c1c",
+            "circle_button_icon": "#f5db8b"
           }
         },
         "scheme-3": {
@@ -201,32 +201,32 @@
       "product_sold_out_badge_background": "#efefef",
       "product_custom_badge_background": "#1c1c1c"
     },
-    "Vogue": {
-      "section_vertical_spacing": "xs",
+    "Vartus Studio": {
+      "section_vertical_spacing": "md",
       "heading_font": "jost_n4",
       "heading_letter_spacing": 18,
-      "text_font": "jost_n4",
+      "text_font": "poppins_n4",
       "text_font_size_desktop": 14,
       "button_letter_spacing": 18,
       "color_schemes": {
         "scheme-1": {
           "settings": {
             "background": "#ffffff",
-            "text_color": "#303030",
-            "primary_button_background": "#f5db8b",
-            "primary_button_text_color": "#303030",
-            "circle_button_background": "#1c1c1c",
-            "circle_button_icon": "#f5db8b"
+            "text_color": "#5c5c5c",
+            "primary_button_background": "#5c5c5c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
           }
         },
         "scheme-2": {
           "settings": {
-            "background": "#ffffff",
-            "text_color": "#303030",
-            "primary_button_background": "#f5db8b",
-            "primary_button_text_color": "#303030",
-            "circle_button_background": "#1c1c1c",
-            "circle_button_icon": "#f5db8b"
+            "background": "#f3f3f3",
+            "text_color": "#5c5c5c",
+            "primary_button_background": "#5c5c5c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#5c5c5c"
           }
         },
         "scheme-3": {

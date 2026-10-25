@@ -29,7 +29,7 @@
     "main": {
       "type": "main-collection",
       "blocks": {
-        "kenzy_promo": {
+        "vartus_promo": {
           "type": "push_promo",
           "settings": {
             "color_scheme": "scheme-3",
@@ -43,7 +43,7 @@
             "content_position": "align-self-center",
             "alignment": "center",
             "subheading": "Marca hecha por amigos",
-            "heading": "Kenzy Couture",
+            "heading": "Vartus Studio",
             "heading_tag": "h4",
             "style": "link",
             "link_text": "Ver drop",
@@ -52,7 +52,7 @@
         }
       },
       "block_order": [
-        "kenzy_promo"
+        "vartus_promo"
       ],
       "settings": {
         "color_scheme": "",

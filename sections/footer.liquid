@@ -170,7 +170,7 @@
         {%- endif -%}
 
         <p class="heading text-subdued text-xxs">
-          © {{ 'now' | date: '%Y' }} - {{ shop.name }}
+          © {{ 'now' | date: '%Y' }} - {{ settings.brand_name | default: shop.name | escape }}
           {%- if section.settings.show_powered_by_shopify -%}{{ powered_by_link }}{%- endif -%}
         </p>
 

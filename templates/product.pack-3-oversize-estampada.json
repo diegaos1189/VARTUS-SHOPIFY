@@ -140,7 +140,7 @@
             "show_below_gallery": true,
             "icon": "picto-delivery-truck",
             "title": "Envíos",
-            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li><strong>¿Dudas?</strong> Escríbenos a 📩 <a><strong>servicioalcliente@kenzycouture.com</strong></a> o chatea con nosotros. </li><li>Consulta nuestra política de envío <a href=\"/pages/📦-politicas-de-envio\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
+            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li>Consulta nuestra página de contacto si necesitas ayuda.</li><li>Consulta nuestra política de envío <a href=\"/pages/📦-politicas-de-envio\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
             "liquid": "",
             "page": ""
           }
@@ -209,7 +209,7 @@
         "image_hrwQxr": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/logo_kz.png"
+
           }
         },
         "text_MTaQdT": {
@@ -227,7 +227,7 @@
         "image_VyHnPj": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/logo_kz.png"
+
           }
         },
         "text_pjHeLN": {
@@ -245,7 +245,7 @@
         "image_4FrjMh": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/logo_kz.png"
+
           }
         },
         "text_nQYhi8": {
