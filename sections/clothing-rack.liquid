@@ -1,10 +1,16 @@
 {%- liquid
   assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5
-  assign collection = section.settings.collection
-  assign products_to_show = section.settings.products_to_show
+
+  assign rack_items = ''
+  assign item_count = 0
+  for block in section.blocks
+    if block.settings.product != blank
+      assign item_count = item_count | plus: 1
+    endif
+  endfor
 -%}
 
-{%- if collection != blank and collection.products.size > 0 -%}
+{%- if item_count > 0 -%}
   <style>
     #shopify-section-{{ section.id }} {
       --rack-rail-color: {{ section.settings.rail_color }};
@@ -153,6 +159,12 @@
       object-fit: contain;
     }
 
+    {%- comment -%}
+      Resting pose (side view) is the normal-flow image. Front/back are
+      absolutely stacked on top and only revealed on hover/focus, so the
+      item always hangs "sideways" until a shopper inspects it.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .rack-item__image--front,
     #shopify-section-{{ section.id }} .rack-item__image--back {
       position: absolute;
       inset: 0;
@@ -160,15 +172,27 @@
       transition: opacity 0.3s ease;
     }
 
-    #shopify-section-{{ section.id }} .rack-item__image--front {
+    #shopify-section-{{ section.id }} .rack-item__image--side {
       transition: opacity 0.3s ease;
     }
 
-    #shopify-section-{{ section.id }} [data-rack-view="back"] .rack-item__image--front {
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--side,
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--side {
       opacity: 0;
     }
 
-    #shopify-section-{{ section.id }} [data-rack-view="back"] .rack-item__image--back {
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:hover .rack-item__image--front,
+    #shopify-section-{{ section.id }}[data-rack-view="front"] .rack-item__hanger:focus-visible .rack-item__image--front {
+      opacity: 1;
+    }
+
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--side,
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--side {
+      opacity: 0;
+    }
+
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:hover .rack-item__image--back,
+    #shopify-section-{{ section.id }}[data-rack-view="back"] .rack-item__hanger:focus-visible .rack-item__image--back {
       opacity: 1;
     }
 
@@ -202,6 +226,14 @@
     #shopify-section-{{ section.id }} .clothing-rack__view-toggle-button.is-active {
       opacity: 1;
       background: rgba(0, 0, 0, 0.08);
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__hint {
+      display: block;
+      text-align: center;
+      margin: 0 0 clamp(1rem, 3vw, 2rem);
+      opacity: 0.6;
+      font-size: 0.85rem;
     }
 
     #shopify-section-{{ section.id }} .clothing-rack__caption {
@@ -274,28 +306,39 @@
             <button type="button" class="clothing-rack__view-toggle-button is-active" data-rack-view-button="front" aria-pressed="true">{{ section.settings.front_label }}</button>
             <button type="button" class="clothing-rack__view-toggle-button" data-rack-view-button="back" aria-pressed="false">{{ section.settings.back_label }}</button>
           </div>
+          <p class="clothing-rack__hint">{{ section.settings.hover_hint }}</p>
         </div>
       {%- endif -%}
 
       <div class="clothing-rack__stage">
         <div class="clothing-rack__rail" aria-hidden="true"></div>
 
-        <div class="clothing-rack__track" data-rack-track tabindex="0" role="region" aria-label="{{ collection.title | escape }}">
+        <div class="clothing-rack__track" data-rack-track tabindex="0" role="region" aria-label="{{ section.settings.heading | strip_html | default: 'Clothing rack' | escape }}">
           <div class="clothing-rack__spacer" aria-hidden="true"></div>
 
-          {%- for product in collection.products limit: products_to_show -%}
+          {%- for block in section.blocks -%}
             {%- liquid
-              assign front_image = product.images[0]
-              assign back_image = product.images[1] | default: front_image
+              assign product = block.settings.product
+              if product == blank
+                continue
+              endif
+
+              assign side_image = product.images[0]
+              assign front_image = product.images[1] | default: side_image
+              assign back_image = product.images[2] | default: front_image
             -%}
-            <div class="rack-item {% if forloop.first %}is-active{% endif %}" data-rack-item>
+            <div class="rack-item {% if forloop.first %}is-active{% endif %}" data-rack-item {{ block.shopify_attributes }}>
               <button type="button" class="rack-item__hanger" data-rack-trigger aria-label="{{ product.title | escape }}">
                 <span class="rack-item__hook" aria-hidden="true"></span>
                 <span class="rack-item__image-wrapper">
+                  {%- if side_image != blank -%}
+                    {{- side_image | image_url: width: side_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', alt: side_image.alt | default: product.title, class: 'rack-item__image rack-item__image--side' -}}
+                  {%- else -%}
+                    {{- 'product-1' | placeholder_svg_tag: 'rack-item__image rack-item__image--side' -}}
+                  {%- endif -%}
+
                   {%- if front_image != blank -%}
                     {{- front_image | image_url: width: front_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', alt: front_image.alt | default: product.title, class: 'rack-item__image rack-item__image--front' -}}
-                  {%- else -%}
-                    {{- 'product-1' | placeholder_svg_tag: 'rack-item__image rack-item__image--front' -}}
                   {%- endif -%}
 
                   {%- if back_image != blank -%}
@@ -309,14 +352,20 @@
           <div class="clothing-rack__spacer" aria-hidden="true"></div>
         </div>
 
-        {%- for product in collection.products limit: products_to_show -%}
-          <div class="clothing-rack__caption {% if forloop.first %}is-active{% endif %}" data-rack-caption>
+        {%- assign is_first_caption = true -%}
+        {%- for block in section.blocks -%}
+          {%- assign product = block.settings.product -%}
+          {%- if product == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+          <div class="clothing-rack__caption {% if is_first_caption %}is-active{% endif %}" data-rack-caption>
             <p class="h6">{{ product.title }}</p>
             {%- render 'price-list', product: product, context: 'card' -%}
             <div data-rack-cta>
               {%- render 'button', href: product.url, content: section.settings.cta_text, style: 'outline' -%}
             </div>
           </div>
+          {%- assign is_first_caption = false -%}
         {%- endfor -%}
       </div>
 
@@ -435,6 +484,7 @@
   "name": "Clothing rack",
   "class": "shopify-section--clothing-rack",
   "tag": "section",
+  "max_blocks": 8,
   "disabled_on": {
     "groups": ["header", "custom.overlay"]
   },
@@ -466,20 +516,6 @@
       "content": "Rack"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
-    {
-      "type": "range",
-      "id": "products_to_show",
-      "label": "Products to show",
-      "min": 3,
-      "max": 12,
-      "step": 1,
-      "default": 7
-    },
-    {
       "type": "color",
       "id": "rail_color",
       "label": "Rail color",
@@ -492,10 +528,17 @@
       "default": "See availability"
     },
     {
+      "type": "header",
+      "content": "Front / back view"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each product needs 3 images in this order: 1) side (resting pose, shown by default), 2) front, 3) back. Upload transparent PNGs so they blend into the rack background."
+    },
+    {
       "type": "checkbox",
       "id": "show_view_toggle",
       "label": "Show front/back toggle",
-      "info": "Uses the 1st product image as front and the 2nd as back. Upload transparent PNGs so they adapt to the rack.",
       "default": true
     },
     {
@@ -509,6 +552,12 @@
       "id": "back_label",
       "label": "Back label",
       "default": "Back"
+    },
+    {
+      "type": "text",
+      "id": "hover_hint",
+      "label": "Hover hint text",
+      "default": "Hover a garment to see it face-on"
     },
     {
       "type": "header",
@@ -549,10 +598,29 @@
       "default": 16
     }
   ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Garment",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Image order on the product: 1) side, 2) front, 3) back."
+        }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Clothing rack",
-      "category": "Collection"
+      "category": "Collection",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
     }
   ]
 }
