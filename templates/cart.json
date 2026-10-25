@@ -1,0 +1,71 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {
+        "color_scheme": "",
+        "show_cart_note": true,
+        "show_order_weight": false,
+        "show_shipping_text": true,
+        "show_accelerated_buttons": false,
+        "show_shipping_estimator": false
+      }
+    },
+    "scrolling_content_FcX9cE": {
+      "type": "scrolling-content",
+      "blocks": {
+        "text_XwTCTB": {
+          "type": "text",
+          "settings": {
+            "text": "No es solo ropa, es un estilo de vida."
+          }
+        },
+        "image_QzqzXY": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz2.png"
+          }
+        },
+        "text_79j4QG": {
+          "type": "text",
+          "settings": {
+            "text": "<strong>Calidad y estilo en cada prenda, como debe ser.</strong>💯"
+          }
+        }
+      },
+      "block_order": [
+        "text_XwTCTB",
+        "image_QzqzXY",
+        "text_79j4QG"
+      ],
+      "settings": {
+        "separate_section_with_border": true,
+        "scrolling_speed": 0.3,
+        "scroll_direction": "left",
+        "pause_on_hover": false,
+        "text_font": "heading",
+        "text_font_size_mobile": 20,
+        "text_font_size_desktop": 30,
+        "section_vertical_spacing_mobile": 30,
+        "section_vertical_spacing_desktop": 30,
+        "item_horizontal_spacing_mobile": 30,
+        "item_horizontal_spacing_desktop": 80,
+        "background": "#1c1c1c",
+        "text_color": "#efefef"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "scrolling_content_FcX9cE"
+  ]
+}

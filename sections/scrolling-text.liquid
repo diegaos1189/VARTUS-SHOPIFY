@@ -1,0 +1,291 @@
+{%- liquid
+  assign color_scheme_hash = section.settings.background | default: settings.default_color_scheme.settings.background | md5
+
+  case section.settings.text_size
+    when 'small'
+      assign mobile_size = '3.2rem'
+      assign desktop_size = '5.5rem'
+    when 'medium'
+      assign mobile_size = '4.4rem'
+      assign desktop_size = '7.5rem'
+    else
+      assign mobile_size = '5.8rem'
+      assign desktop_size = '10rem'
+  endcase
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --scrolling-text-mobile-size: {{ mobile_size }};
+    --scrolling-text-desktop-size: {{ desktop_size }};
+    --scrolling-text-gap: clamp(2rem, 4vw, 4.5rem);
+    --scrolling-text-stroke: {{ section.settings.outline_width }}px;
+    --scrolling-text-duration: {{ section.settings.automatic_speed }}s;
+    --scrolling-text-translate: 0px;
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section {
+    overflow: clip;
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__viewport {
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: var(--scrolling-text-gap);
+    will-change: transform;
+    transform: translate3d(var(--scrolling-text-translate), 0, 0);
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--scrolling-text-gap);
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__item {
+    flex: 0 0 auto;
+    margin: 0;
+    font-size: var(--scrolling-text-mobile-size);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    font-weight: 700;
+    text-transform: none;
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__item--fill {
+    {% if section.settings.text_gradient != blank %}
+      background: {{ section.settings.text_gradient }};
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    {% else %}
+      color: rgb(var(--text-color));
+    {% endif %}
+  }
+
+  #shopify-section-{{ section.id }} .scrolling-text-section__item--outline {
+    color: transparent;
+    -webkit-text-stroke: var(--scrolling-text-stroke) rgb(var(--text-color));
+    text-stroke: var(--scrolling-text-stroke) rgb(var(--text-color));
+  }
+
+  #shopify-section-{{ section.id }} [data-mode="automatic"] .scrolling-text-section__track {
+    animation: scrolling-text-marquee-{{ section.id }} var(--scrolling-text-duration) linear infinite;
+  }
+
+  @keyframes scrolling-text-marquee-{{ section.id }} {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(calc(-50% - var(--scrolling-text-gap) / 2), 0, 0);
+    }
+  }
+
+  @media screen and (min-width: 700px) {
+    #shopify-section-{{ section.id }} .scrolling-text-section__item {
+      font-size: var(--scrolling-text-desktop-size);
+    }
+  }
+</style>
+
+<div class="color-scheme color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}" style="{% render 'surface', background: section.settings.background, text_color: section.settings.text_color %}">
+  <div class="scrolling-text-section {% unless section.settings.remove_vertical_spacing %}section-spacing{% endunless %}" data-scrolling-text-section data-mode="{{ section.settings.scrolling_mode }}" data-speed="{{ section.settings.on_scroll_speed }}" data-direction="{{ section.settings.scroll_direction }}">
+    <div class="{% if section.settings.full_width %}full-bleed{% else %}container{% endif %}">
+      <div class="scrolling-text-section__viewport">
+        <div class="scrolling-text-section__track">
+          {%- for i in (1..2) -%}
+            <div class="scrolling-text-section__group" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
+              {%- for j in (1..4) -%}
+                <p class="scrolling-text-section__item scrolling-text-section__item--{{ section.settings.text_style }}">
+                  {{- section.settings.text -}}
+                </p>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+
+    const section = root.querySelector('[data-scrolling-text-section]');
+    if (!section || section.dataset.mode !== 'on-scroll') return;
+
+    const track = section.querySelector('.scrolling-text-section__track');
+    const group = section.querySelector('.scrolling-text-section__group');
+    if (!track || !group) return;
+
+    const direction = section.dataset.direction === 'right' ? 1 : -1;
+    const speed = parseFloat(section.dataset.speed || '0.35');
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+
+      const rect = section.getBoundingClientRect();
+      const sectionTop = window.scrollY + rect.top;
+      const sectionHeight = rect.height || 1;
+      const scrollProgress = (window.scrollY + window.innerHeight - sectionTop) / (sectionHeight + window.innerHeight);
+      const px = ((scrollProgress * group.offsetWidth * speed * direction) % group.offsetWidth);
+
+      track.style.setProperty('--scrolling-text-translate', `${px}px`);
+    };
+
+    const requestTick = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', requestTick, { passive: true });
+    window.addEventListener('resize', requestTick);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Scrolling text",
+  "class": "shopify-section--scrolling-text",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "Separate section with border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "remove_vertical_spacing",
+      "label": "Remove vertical spacing",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Scrolling text"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Text style",
+      "options": [
+        { "value": "outline", "label": "Outline" },
+        { "value": "fill", "label": "Fill" }
+      ],
+      "default": "fill"
+    },
+    {
+      "type": "range",
+      "id": "outline_width",
+      "label": "Outline width",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "scrolling_mode",
+      "label": "Scrolling mode",
+      "options": [
+        { "value": "automatic", "label": "Automatic" },
+        { "value": "on-scroll", "label": "On scroll" }
+      ],
+      "default": "automatic"
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "Scroll direction",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "automatic_speed",
+      "label": "Automatic scrolling speed",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "unit": "s",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "on_scroll_speed",
+      "label": "On scroll speed",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.35
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#5f6552"
+    },
+    {
+      "type": "color_background",
+      "id": "text_gradient",
+      "label": "Text gradient"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling text",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

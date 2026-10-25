@@ -1,0 +1,273 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h3"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "payment_terms": {
+          "type": "payment_terms",
+          "settings": {}
+        },
+        "inventory_hdetzK": {
+          "type": "inventory",
+          "settings": {
+            "show_in_stock_quantity": true,
+            "low_inventory_threshold": 5,
+            "show_progress_bar": true,
+            "progress_bar_max_value": 50
+          }
+        },
+        "separator": {
+          "type": "separator",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "collapse_content": false,
+            "show_below_gallery": false
+          }
+        },
+        "text_hk6d7p": {
+          "type": "text",
+          "settings": {
+            "text": ""
+          }
+        },
+        "offers_i89U9B": {
+          "type": "offers",
+          "settings": {
+            "stack_offers": false,
+            "offer_1_title": "<strong>TELA PREMIUM </strong>",
+            "offer_1_content": "<p><em>Una vez la tocas, notarás la diferencia.</em></p>",
+            "offer_2_title": "",
+            "offer_2_content": "",
+            "offer_3_title": "",
+            "offer_3_content": "",
+            "background": "#415057",
+            "text_color": "#efefef",
+            "border_color": ""
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "selector_style": "underline",
+            "swatch_selector_style": "swatch_underline",
+            "variant_image_options": "",
+            "size_chart_page": "instant-example"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": true,
+            "show_gift_card_recipient": false,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "complementary_products": {
+          "type": "complementary_products",
+          "disabled": true,
+          "settings": {
+            "title": "Combina bien con",
+            "products_count": 2,
+            "show_below_gallery": true,
+            "stack_products": false,
+            "show_quick_buy": true
+          }
+        },
+        "accordion_RXWRHB": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-document",
+            "title": "Detalles del producto",
+            "content": "<p>ESPECIFICACIONES</p><ul><li>Ilustración</li><li>Tela Fría doble capa 160g x metro</li><li>Gramaje medio</li><li>Tela Premium</li></ul>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "accordion_zbNypx": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-delivery-truck",
+            "title": "Envíos",
+            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li><strong>¿Dudas?</strong> Escríbenos a 📩 <a><strong>servicioalcliente@kenzycouture.com</strong></a> o chatea con nosotros. </li><li>Consulta nuestra política de envío <a href=\"/pages/📦-politicas-de-envio\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "accordion_AbByL6": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-return",
+            "title": "Devoluciones y garantías",
+            "content": "<p>Si la ropa a devolver no tiene descuento, nosotros te recogemos <strong>gratis</strong> (no aplica para productos en promoción)<br/><br/><strong>Devolución producto:</strong> tienes 30 días calendario desde que llega tu ropa para realizar el proceso (te compartiremos un código con el saldo a favor para tu próxima compra en el sitio web).<br/><br/><strong>Garantías:</strong> tienes 60 días calendario desde que llega tu ropa para hacer la solicitud de la garantía.<br/><br/><strong>Devolución de dinero:</strong> Tienes 10 días hábiles desde que llega tu ropa para solicitar la devolución del dinero.<br/></p>",
+            "liquid": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "payment_terms",
+        "inventory_hdetzK",
+        "separator",
+        "description",
+        "text_hk6d7p",
+        "offers_i89U9B",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "complementary_products",
+        "accordion_RXWRHB",
+        "accordion_zbNypx",
+        "accordion_AbByL6"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "container_size": "lg",
+        "product_info_size": 35,
+        "show_sticky_add_to_cart": true,
+        "center_basic_info": false,
+        "desktop_media_layout": "grid_2x",
+        "desktop_media_grid_gap": 10,
+        "mobile_controls": "dots",
+        "enable_media_autoplay": false,
+        "enable_video_looping": true,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 2
+      }
+    },
+    "scrolling_content_6DQ7L4": {
+      "type": "scrolling-content",
+      "blocks": {
+        "text_Jb94kJ": {
+          "type": "text",
+          "settings": {
+            "text": "no destiñe"
+          }
+        },
+        "image_hrwQxr": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz.png"
+          }
+        },
+        "text_MTaQdT": {
+          "type": "text",
+          "settings": {
+            "text": "Tela premium"
+          }
+        },
+        "text_8JbQB8": {
+          "type": "text",
+          "settings": {
+            "text": "Tela Fría Doble Capa"
+          }
+        },
+        "image_VyHnPj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz.png"
+          }
+        },
+        "text_pjHeLN": {
+          "type": "text",
+          "settings": {
+            "text": "Diseños exclusivos"
+          }
+        },
+        "text_4mdpFj": {
+          "type": "text",
+          "settings": {
+            "text": "Envío gratis"
+          }
+        }
+      },
+      "block_order": [
+        "text_Jb94kJ",
+        "image_hrwQxr",
+        "text_MTaQdT",
+        "text_8JbQB8",
+        "image_VyHnPj",
+        "text_pjHeLN",
+        "text_4mdpFj"
+      ],
+      "settings": {
+        "separate_section_with_border": true,
+        "scrolling_speed": 0.3,
+        "scroll_direction": "left",
+        "pause_on_hover": false,
+        "text_font": "heading",
+        "text_font_size_mobile": 16,
+        "text_font_size_desktop": 30,
+        "section_vertical_spacing_mobile": 26,
+        "section_vertical_spacing_desktop": 26,
+        "item_horizontal_spacing_mobile": 25,
+        "item_horizontal_spacing_desktop": 80,
+        "background": "",
+        "text_color": ""
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "recommendations_count": 10,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1,
+        "subheading": "",
+        "title": "No te vayas sin ver estos.",
+        "content": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "scrolling_content_6DQ7L4",
+    "related-products"
+  ]
+}

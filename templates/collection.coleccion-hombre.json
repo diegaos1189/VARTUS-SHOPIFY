@@ -1,0 +1,82 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "collection-banner": {
+      "type": "collection-banner",
+      "settings": {
+        "color_scheme": "",
+        "image": "shopify://shop_images/categoria_hombre-kenzycouture.webp",
+        "image_size": "xs",
+        "allow_transparent_header": false,
+        "show_image": true,
+        "reveal": true,
+        "enable_parallax": false,
+        "show_collection_title": false,
+        "show_collection_description": false,
+        "show_breadcrumb": false,
+        "content_width": "xs",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "kenzy_promo": {
+          "type": "push_promo",
+          "settings": {
+            "color_scheme": "scheme-3",
+            "bordered": false,
+            "position": 5,
+            "size": "1",
+            "media_type": "image",
+            "image": "",
+            "mobile_image": "",
+            "overlay_color": "rgba(0,0,0,0.3)",
+            "content_position": "align-self-center",
+            "alignment": "center",
+            "subheading": "Hecho en Medellin",
+            "heading": "Streetwear premium",
+            "heading_tag": "h4",
+            "style": "link",
+            "link_text": "Comprar ahora",
+            "url": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "kenzy_promo"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "hide_product_information": false,
+        "products_per_page": 48,
+        "products_per_row_mobile": "2",
+        "products_size_desktop": "medium",
+        "show_grid_mode_selector": true,
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1,
+        "filter_layout": "drawer",
+        "quick_links_menu": "",
+        "show_sort_by": false,
+        "show_filters": true,
+        "show_results_count": true,
+        "show_filter_group_name": false,
+        "show_filter_values_count": true,
+        "open_filters_by_default": false
+      }
+    }
+  },
+  "order": [
+    "collection-banner",
+    "main"
+  ]
+}

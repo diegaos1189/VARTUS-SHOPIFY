@@ -1,0 +1,287 @@
+{%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --impact-text-size-mobile: {{ section.settings.impact_text_size_mobile }}rem;
+    --impact-text-size-desktop: {{ section.settings.impact_text_size_desktop }}rem;
+    --impact-text-opacity: {{ section.settings.impact_text_opacity | divided_by: 100.0 }};
+    --impact-content-max-width: {{ section.settings.content_max_width }}px;
+    --impact-text-gradient: linear-gradient(180deg, rgb(var(--text-color) / calc(var(--impact-text-opacity) * 1.2)) 0%, rgb(var(--text-color) / var(--impact-text-opacity)) 20%, rgb(var(--text-color) / calc(var(--impact-text-opacity) * 0.6)) 45%, rgb(var(--text-color) / calc(var(--impact-text-opacity) * 0.25)) 70%, rgb(var(--text-color) / 0) 100%);
+  }
+
+  #shopify-section-{{ section.id }} .impact-text {
+    position: relative;
+    overflow: clip;
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__inner {
+    position: relative;
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__ghost {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    font-size: var(--impact-text-size-mobile);
+    line-height: 0.85;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    text-align: center;
+    color: transparent;
+    opacity: 1;
+    background: var(--impact-text-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: saturate(0.85);
+    pointer-events: none;
+    user-select: none;
+    overflow-wrap: anywhere;
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__content {
+    position: relative;
+    z-index: 1;
+    max-width: min(100%, var(--impact-content-max-width));
+    margin-inline: auto;
+    padding-block-start: clamp(6rem, 12vw, 9rem);
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__heading {
+    margin-block: 0;
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__prose {
+    margin-block-start: 1rem;
+  }
+
+  #shopify-section-{{ section.id }} .impact-text__button {
+    margin-block-start: 2rem;
+  }
+
+  @media screen and (min-width: 700px) {
+    #shopify-section-{{ section.id }} .impact-text__ghost {
+      font-size: var(--impact-text-size-desktop);
+    }
+
+    #shopify-section-{{ section.id }} .impact-text__content {
+      padding-block-start: clamp(7rem, 10vw, 10rem);
+    }
+  }
+</style>
+
+<div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% unless section.settings.remove_vertical_spacing %}section-spacing{% endunless %} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+  <div class="container">
+    <div class="impact-text text-center">
+      <div class="impact-text__inner">
+        {%- if section.settings.impact_text != blank -%}
+          <p class="impact-text__ghost" {% if section.settings.show_count_up_animation %}data-impact-counter{% endif %}>
+            {{- section.settings.impact_text -}}
+          </p>
+        {%- endif -%}
+
+        <div class="impact-text__content">
+          <div class="prose">
+            {%- if section.settings.subheading != blank -%}
+              <h2 class="impact-text__heading h2">{{ section.settings.subheading }}</h2>
+            {%- endif -%}
+
+            {%- if section.settings.content != blank -%}
+              <div class="impact-text__prose">
+                {{ section.settings.content }}
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.button_text != blank -%}
+            <div class="impact-text__button">
+              {%- render 'button', href: section.settings.button_link, content: section.settings.button_text -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.show_count_up_animation and section.settings.impact_text != blank -%}
+  <script>
+    (() => {
+      const root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+
+      const target = root.querySelector('[data-impact-counter]');
+      if (!target) return;
+
+      const original = target.textContent.trim();
+      const numericValue = original.replace(/[^0-9]/g, '');
+      if (!numericValue) return;
+
+      const finalValue = parseInt(numericValue, 10);
+      if (Number.isNaN(finalValue)) return;
+
+      const formatValue = (value) => {
+        const digits = String(value);
+        let index = 0;
+
+        return original.replace(/[0-9]/g, () => digits[index++] ?? '');
+      };
+
+      const duration = {{ section.settings.animation_duration | times: 1000 }};
+      let started = false;
+
+      const observer = new IntersectionObserver((entries) => {
+        if (started || !entries[0].isIntersecting) return;
+        started = true;
+
+        const start = performance.now();
+
+        const tick = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const value = Math.floor(finalValue * progress);
+          target.textContent = formatValue(value);
+
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            target.textContent = original;
+          }
+        };
+
+        requestAnimationFrame(tick);
+        observer.disconnect();
+      }, { threshold: 0.35 });
+
+      observer.observe(target);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Impact text",
+  "class": "shopify-section--impact-text",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "Separate section with border",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "remove_vertical_spacing",
+      "label": "Remove vertical spacing",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "impact_text",
+      "label": "Impact text",
+      "default": "kenzy couture",
+      "info": "Keep this short for the strongest visual effect."
+    },
+    {
+      "type": "range",
+      "id": "impact_text_size_mobile",
+      "label": "Impact size mobile",
+      "min": 3,
+      "max": 8,
+      "step": 0.5,
+      "default": 4.5
+    },
+    {
+      "type": "range",
+      "id": "impact_text_size_desktop",
+      "label": "Impact size desktop",
+      "min": 5,
+      "max": 16,
+      "step": 0.5,
+      "default": 9
+    },
+    {
+      "type": "range",
+      "id": "impact_text_opacity",
+      "label": "Impact opacity",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Share content"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Use this section to share a point of view, a drop message, or a sharp brand statement that feels true to Kenzy.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 480,
+      "max": 1100,
+      "step": 20,
+      "unit": "px",
+      "default": 820
+    },
+    {
+      "type": "header",
+      "content": "Number animation"
+    },
+    {
+      "type": "paragraph",
+      "content": "Only works if the impact text is numeric."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count_up_animation",
+      "label": "Show count up animation",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Impact text",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

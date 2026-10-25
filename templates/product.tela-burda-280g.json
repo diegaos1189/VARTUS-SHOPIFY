@@ -1,0 +1,239 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h3"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "payment_terms": {
+          "type": "payment_terms",
+          "settings": {}
+        },
+        "separator": {
+          "type": "separator",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "collapse_content": true,
+            "show_below_gallery": false
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "selector_style": "underline",
+            "swatch_selector_style": "swatch_underline",
+            "variant_image_options": "",
+            "size_chart_page": ""
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": true,
+            "show_gift_card_recipient": true,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "complementary_products": {
+          "type": "complementary_products",
+          "settings": {
+            "title": "Combina bien con",
+            "products_count": 2,
+            "show_below_gallery": true,
+            "stack_products": false,
+            "show_quick_buy": true
+          }
+        },
+        "accordion_RXWRHB": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-document",
+            "title": "Detalles del producto",
+            "content": "<p>ESPECIFICACIONES</p><ul><li>Ilustración</li><li>Tela Burda Alta calidad 280g x metro</li><li>Alto gramaje</li><li>Tela Premium</li><li>Oversize</li></ul>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "accordion_zbNypx": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-delivery-truck",
+            "title": "Envíos",
+            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li><strong>¿Dudas?</strong> Escríbenos a 📩 <a><strong>servicioalcliente@kenzycouture.com</strong></a> o chatea con nosotros. </li><li>Consulta nuestra política de envío <a href=\"/pages/📦-politicas-de-envio\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
+            "liquid": "",
+            "page": ""
+          }
+        },
+        "accordion_AbByL6": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": true,
+            "icon": "picto-return",
+            "title": "Devoluciones y garantías",
+            "content": "<p>Si la ropa a devolver no tiene descuento, nosotros te recogemos <strong>gratis</strong> (no aplica para productos en promoción)<br/><br/><strong>Devolución producto:</strong> tienes 30 días calendario desde que llega tu ropa para realizar el proceso (te compartiremos un código con el saldo a favor para tu próxima compra en el sitio web).<br/><br/><strong>Garantías:</strong> tienes 60 días calendario desde que llega tu ropa para hacer la solicitud de la garantía.<br/><br/><strong>Devolución de dinero:</strong> Tienes 10 días hábiles desde que llega tu ropa para solicitar la devolución del dinero.<br/></p>",
+            "liquid": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "payment_terms",
+        "separator",
+        "description",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "complementary_products",
+        "accordion_RXWRHB",
+        "accordion_zbNypx",
+        "accordion_AbByL6"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "container_size": "lg",
+        "product_info_size": 30,
+        "show_sticky_add_to_cart": true,
+        "center_basic_info": false,
+        "desktop_media_layout": "carousel_thumbnails_left",
+        "desktop_media_grid_gap": 25,
+        "mobile_controls": "dots",
+        "enable_media_autoplay": false,
+        "enable_video_looping": true,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 2
+      }
+    },
+    "scrolling_content_6DQ7L4": {
+      "type": "scrolling-content",
+      "blocks": {
+        "text_Jb94kJ": {
+          "type": "text",
+          "settings": {
+            "text": "no destiñe"
+          }
+        },
+        "image_hrwQxr": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz.png"
+          }
+        },
+        "text_MTaQdT": {
+          "type": "text",
+          "settings": {
+            "text": "Tela premium"
+          }
+        },
+        "text_pjHeLN": {
+          "type": "text",
+          "settings": {
+            "text": "Alto gramaje"
+          }
+        },
+        "image_VyHnPj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz.png"
+          }
+        },
+        "text_8JbQB8": {
+          "type": "text",
+          "settings": {
+            "text": "Tela burda Alta calidad 280 g"
+          }
+        },
+        "text_9kxQ83": {
+          "type": "text",
+          "settings": {
+            "text": "Tacto Suave"
+          }
+        }
+      },
+      "block_order": [
+        "text_Jb94kJ",
+        "image_hrwQxr",
+        "text_MTaQdT",
+        "text_pjHeLN",
+        "image_VyHnPj",
+        "text_8JbQB8",
+        "text_9kxQ83"
+      ],
+      "settings": {
+        "separate_section_with_border": true,
+        "scrolling_speed": 0.3,
+        "scroll_direction": "left",
+        "pause_on_hover": false,
+        "text_font": "heading",
+        "text_font_size_mobile": 16,
+        "text_font_size_desktop": 30,
+        "section_vertical_spacing_mobile": 26,
+        "section_vertical_spacing_desktop": 26,
+        "item_horizontal_spacing_mobile": 25,
+        "item_horizontal_spacing_desktop": 80,
+        "background": "",
+        "text_color": ""
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "recommendations_count": 10,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1,
+        "subheading": "",
+        "title": "<strong>Más opciones que te encantarán.</strong>",
+        "content": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "scrolling_content_6DQ7L4",
+    "related-products"
+  ]
+}

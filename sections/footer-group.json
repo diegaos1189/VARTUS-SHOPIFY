@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "newsletter_JU4dMC": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "scheme-3",
+        "separate_section_with_border": true,
+        "image_size": "auto",
+        "subheading": "Entra al circulo",
+        "title": "Drop alerts y acceso antes que todos",
+        "content": "<p>Nuevos lanzamientos, restocks y beneficios para la comunidad Kenzy.</p>",
+        "button_text": "Unirme",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "image_NJLrzj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/logo_kz2.png",
+            "image_width": 120,
+            "link": ""
+          }
+        },
+        "links": {
+          "type": "links",
+          "settings": {
+            "menu": "footer",
+            "show_menu_title": true,
+            "menu_title": ""
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "title": "<strong>Marca hecha por amigos</strong>",
+            "content": "<p>Kenzy Couture nace en Medellin para vestir calle, noche y movimiento. Siluetas premium, actitud urbana y piezas pensadas para durar.</p>",
+            "enable_follow_on_shop": true
+          }
+        }
+      },
+      "block_order": [
+        "image_NJLrzj",
+        "links",
+        "text"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "separate_section_with_border": false,
+        "show_social_media": true,
+        "show_payment_icons": true,
+        "show_country_selector": true,
+        "show_country_name": true,
+        "show_country_flag": true,
+        "show_locale_selector": true
+      }
+    }
+  },
+  "order": [
+    "newsletter_JU4dMC",
+    "footer"
+  ]
+}
