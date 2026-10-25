@@ -1,11 +1,22 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Kenzy Couture",
-    "theme_author": "kenzygroup",
+    "theme_name": "Vartus Studio",
+    "theme_author": "Vartus Studio",
     "theme_version": "11.0.1",
-    "theme_documentation_url": "https://kenzygroup.co",
-    "theme_support_url": "https://supportp@kenzygroup.co"
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com/"
+  },
+  {
+    "name": "Vartus Studio",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Nombre de la marca",
+        "default": "VARTUS STUDIO"
+      }
+    ]
   },
   {
     "name": "t:theme_settings.appearance.name",

@@ -13,7 +13,7 @@
       "type": "collection-banner",
       "settings": {
         "color_scheme": "",
-        "image": "shopify://shop_images/categoria_hombre-kenzycouture.webp",
+
         "image_size": "xs",
         "allow_transparent_header": false,
         "show_image": true,
@@ -30,7 +30,7 @@
     "main": {
       "type": "main-collection",
       "blocks": {
-        "kenzy_promo": {
+        "vartus_promo": {
           "type": "push_promo",
           "settings": {
             "color_scheme": "scheme-3",
@@ -53,7 +53,7 @@
         }
       },
       "block_order": [
-        "kenzy_promo"
+        "vartus_promo"
       ],
       "settings": {
         "color_scheme": "",

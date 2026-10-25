@@ -15,12 +15,12 @@
         "slide-1": {
           "type": "image",
           "settings": {
-            "subheading": "",
-            "title": "",
+            "subheading": "VARTUS STUDIO",
+            "title": "Identidad en cada pieza",
             "mobile_text_position": "place-self-center text-center",
             "desktop_text_position": "sm:place-self-center sm:text-center",
             "content_max_width": 720,
-            "button_1_text": "",
+            "button_1_text": "Explorar la colecci?n",
             "button_1_link": "/collections/all",
             "button_1_style": "solid",
             "button_1_background": "#f5f1eb",
@@ -34,7 +34,7 @@
             "background_opacity": 0,
             "text_color": "#ffffff",
             "border_color": "",
-            "gradient_overlay": "linear-gradient(180deg, rgba(NaN, NaN, NaN, 0), rgba(5, 5, 5, 0.18) 35%, rgba(5, 5, 5, 0.72) 100%)"
+            "gradient_overlay": "linear-gradient(180deg, rgba(5, 5, 5, 0.15), rgba(5, 5, 5, 0.72) 100%)"
           }
         }
       },
@@ -135,18 +135,18 @@
       "settings": {
         "color_scheme": "",
         "separate_section_with_border": false,
-        "subheading": "",
-        "heading": "",
+        "subheading": "VARTUS STUDIO",
+        "heading": "Elige tu silueta",
         "rail_color": "#b5b7ba",
-        "cta_text": "See availability",
+        "cta_text": "Ver disponibilidad",
         "show_view_toggle": true,
-        "front_label": "Front",
-        "back_label": "Back",
-        "hover_hint": "Hover a garment to see it face-on",
+        "front_label": "Frente",
+        "back_label": "Espalda",
+        "hover_hint": "Explora las prendas y descubre cada detalle",
         "show_marquee": true,
-        "marquee_text": "IT'S US, NEVER THEM  •  NEW DROPS  •  LAGOS  •",
-        "marquee_background": "#39ff14",
-        "marquee_text_color": "#000000",
+        "marquee_text": "VARTUS STUDIO ? IDENTIDAD PROPIA ? STREETWEAR ?",
+        "marquee_background": "#121212",
+        "marquee_text_color": "#f5f1eb",
         "marquee_speed": 16
       }
     },
@@ -176,7 +176,7 @@
         "products_per_row_desktop": 4,
         "horizontal_spacing_factor": 1,
         "vertical_spacing_factor": 1,
-        "subheading": "Colección Renacer",
+        "subheading": "El universo Vartus",
         "hide_collection_title": false
       }
     },
@@ -199,7 +199,7 @@
         "body": {
           "type": "richtext",
           "settings": {
-            "content": "<p>Prendas con estructura, hombro comodo, largo balanceado y acabados pensados para durar. Kenzy mezcla moda urbana local con calidad real para el uso diario.</p>"
+            "content": "<p>Vartus Studio explora la silueta, la expresi?n y los detalles. Streetwear para construir tu propia forma de vestir.</p>"
           }
         },
         "button": {
@@ -226,26 +226,6 @@
         "content_width": "md",
         "text_position": "center",
         "remove_vertical_spacing": false
-      }
-    },
-    "impact_text_kenzy": {
-      "type": "impact-text",
-      "disabled": true,
-      "settings": {
-        "color_scheme": "scheme-1",
-        "separate_section_with_border": true,
-        "remove_vertical_spacing": false,
-        "impact_text": "Renacer",
-        "impact_text_size_mobile": 3.5,
-        "impact_text_size_desktop": 14.5,
-        "impact_text_opacity": 30,
-        "subheading": "Streetwear con actitud real",
-        "content": "<p>Piezas que hablan por vos. Diseños limpios, siluetas con presencia y una energia de calle hecha para Medellin y toda Colombia.</p>",
-        "button_text": "Ver tienda",
-        "button_link": "/collections/all",
-        "content_max_width": 820,
-        "show_count_up_animation": false,
-        "animation_duration": 2
       }
     },
     "collection-list": {
@@ -321,7 +301,7 @@
         "collections_per_row_mobile": "1",
         "subheading": "Nuevo drop",
         "title": "Noches de asfalto",
-        "content": "<p>Oversized, fit y graficas de alto contraste en telas premium 100% algodon. Desde Medellin para vestir calle, noche y movimiento.</p>"
+        "content": "<p>Explora las siluetas y los detalles de Vartus Studio.</p>"
       }
     },
     "1743988062a82d2af0": {
@@ -347,7 +327,7 @@
         "show_read_more": true,
         "subheading": "Cultura y lanzamiento",
         "title": "Detras del drop",
-        "content": "<p>Novedades, ideas y momentos de la comunidad Kenzy.</p>",
+        "content": "<p>Novedades, ideas y momentos de la comunidad Vartus Studio.</p>",
         "button_link": "",
         "button_text": "Leer mas"
       }
@@ -363,6 +343,26 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "impact_text_vartus": {
+      "type": "impact-text",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "separate_section_with_border": true,
+        "remove_vertical_spacing": false,
+        "impact_text": "VARTUS",
+        "impact_text_size_mobile": 3.5,
+        "impact_text_size_desktop": 14.5,
+        "impact_text_opacity": 30,
+        "subheading": "Streetwear con actitud real",
+        "content": "<p>Una forma de vestir con identidad propia. Explora el universo de Vartus Studio.</p>",
+        "button_text": "Ver tienda",
+        "button_link": "/collections/all",
+        "content_max_width": 820,
+        "show_count_up_animation": false,
+        "animation_duration": 2
+      }
     }
   },
   "order": [
@@ -371,7 +371,7 @@
     "clothing_rack_DCVQ8N",
     "featured-collections",
     "rich_text_brand_manifesto",
-    "impact_text_kenzy",
+    "impact_text_vartus",
     "collection-list",
     "1743988062a82d2af0",
     "blog-posts",

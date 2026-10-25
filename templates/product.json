@@ -84,7 +84,7 @@
             "show_below_gallery": true,
             "icon": "picto-delivery-truck",
             "title": "Envíos",
-            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li><strong>¿Dudas?</strong> Escríbenos a 📩 <a><strong>servicioalcliente@kenzycouture.com</strong></a> o chatea con nosotros.</li><li>Consulta nuestra política de envío <a href=\"https://kenzycouture.com/pages/%F0%9F%93%A6-politicas-de-envio\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
+            "content": "<p>📦 <strong>Envíos a toda Colombia</strong></p><ul><li>Tiempo de entrega: 2 a 7 días hábiles según tu ubicación.</li><li>Costo de envío: Calculado al finalizar la compra.</li><li>Consulta nuestra página de contacto si necesitas ayuda.</li><li>Consulta nuestra política de envío <a href=\"/policies/shipping-policy\" target=\"_blank\" title=\"📦 Políticas de Envío\">aquí</a></li></ul>",
             "liquid": "",
             "page": ""
           }

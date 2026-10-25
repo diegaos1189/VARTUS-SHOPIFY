@@ -19,7 +19,7 @@
         "image_size": "auto",
         "subheading": "Entra al circulo",
         "title": "Drop alerts y acceso antes que todos",
-        "content": "<p>Nuevos lanzamientos, restocks y beneficios para la comunidad Kenzy.</p>",
+        "content": "<p>Nuevos lanzamientos y novedades de Vartus Studio. S? parte de la comunidad.</p>",
         "button_text": "Unirme",
         "overlay_color": "#000000",
         "overlay_opacity": 0
@@ -28,14 +28,6 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "image_NJLrzj": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/logo_kz2.png",
-            "image_width": 120,
-            "link": ""
-          }
-        },
         "links": {
           "type": "links",
           "settings": {
@@ -47,14 +39,13 @@
         "text": {
           "type": "text",
           "settings": {
-            "title": "<strong>Marca hecha por amigos</strong>",
-            "content": "<p>Kenzy Couture nace en Medellin para vestir calle, noche y movimiento. Siluetas premium, actitud urbana y piezas pensadas para durar.</p>",
+            "title": "<strong>VARTUS STUDIO</strong>",
+            "content": "<p>Streetwear con identidad propia. Siluetas, detalles y una forma de vestir que habla por ti.</p>",
             "enable_follow_on_shop": true
           }
         }
       },
       "block_order": [
-        "image_NJLrzj",
         "links",
         "text"
       ],
