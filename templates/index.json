@@ -54,6 +54,36 @@
         "controls_color": "#ffffff"
       }
     },
+    "featured-collections": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "collection": "rack-tendency",
+            "products_count": 12,
+            "title": "Piezas para rotar toda la semana",
+            "link_url": "",
+            "link_text": "Ver drop"
+          }
+        }
+      },
+      "block_order": [
+        "collection-1"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": true,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1,
+        "subheading": "New drop",
+        "hide_collection_title": false
+      }
+    },
     "text_with_icons_KY9e7t": {
       "type": "text-with-icons",
       "blocks": {
@@ -100,36 +130,6 @@
         "icon_color": "",
         "text_color": "",
         "text_alignment": "center"
-      }
-    },
-    "featured-collections": {
-      "type": "featured-collections",
-      "blocks": {
-        "collection-1": {
-          "type": "collection",
-          "settings": {
-            "collection": "rack-tendency",
-            "products_count": 12,
-            "title": "Piezas para rotar toda la semana",
-            "link_url": "",
-            "link_text": "Ver drop"
-          }
-        }
-      },
-      "block_order": [
-        "collection-1"
-      ],
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": true,
-        "hide_product_information": false,
-        "stack_products": true,
-        "products_per_row_mobile": "2",
-        "products_per_row_desktop": 4,
-        "horizontal_spacing_factor": 1,
-        "vertical_spacing_factor": 1,
-        "subheading": "Colección Renacer",
-        "hide_collection_title": false
       }
     },
     "rich_text_brand_manifesto": {
@@ -319,8 +319,8 @@
   },
   "order": [
     "slideshow",
-    "text_with_icons_KY9e7t",
     "featured-collections",
+    "text_with_icons_KY9e7t",
     "rich_text_brand_manifesto",
     "impact_text_kenzy",
     "collection-list",
