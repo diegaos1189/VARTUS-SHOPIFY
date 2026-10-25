@@ -15,7 +15,6 @@
         "slide-1": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/Imagen_horizontal_16_9_para_banner_202607051418-_2_-_1.webp",
             "subheading": "",
             "title": "",
             "mobile_text_position": "place-self-center text-center",
@@ -100,6 +99,28 @@
         "icon_color": "",
         "text_color": "",
         "text_alignment": "center"
+      }
+    },
+    "clothing_rack_DCVQ8N": {
+      "type": "clothing-rack",
+      "name": "Clothing rack",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "subheading": "",
+        "heading": "",
+        "collection": "rack-tendency",
+        "products_to_show": 7,
+        "rail_color": "#b5b7ba",
+        "cta_text": "See availability",
+        "show_view_toggle": true,
+        "front_label": "Front",
+        "back_label": "Back",
+        "show_marquee": true,
+        "marquee_text": "IT'S US, NEVER THEM  •  NEW DROPS  •  LAGOS  •",
+        "marquee_background": "#39ff14",
+        "marquee_text_color": "#000000",
+        "marquee_speed": 16
       }
     },
     "featured-collections": {
@@ -320,6 +341,7 @@
   "order": [
     "slideshow",
     "text_with_icons_KY9e7t",
+    "clothing_rack_DCVQ8N",
     "featured-collections",
     "rich_text_brand_manifesto",
     "impact_text_kenzy",
