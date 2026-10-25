@@ -1,0 +1,453 @@
+{%- liquid
+  assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5
+  assign collection = section.settings.collection
+  assign products_to_show = section.settings.products_to_show
+-%}
+
+{%- if collection != blank and collection.products.size > 0 -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --rack-rail-color: {{ section.settings.rail_color }};
+      --rack-item-width: clamp(130px, 22vw, 230px);
+      --rack-caption-offset: clamp(2rem, 5vw, 3.5rem);
+      --rack-marquee-bg: {{ section.settings.marquee_background }};
+      --rack-marquee-color: {{ section.settings.marquee_text_color }};
+      --rack-marquee-duration: {{ section.settings.marquee_speed }}s;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack {
+      position: relative;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__stage {
+      position: relative;
+      padding-top: clamp(3rem, 6vw, 5rem);
+      padding-bottom: calc(var(--rack-caption-offset) + 6rem);
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__rail {
+      position: absolute;
+      top: clamp(2.2rem, 5vw, 4rem);
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), var(--rack-rail-color) 35%, var(--rack-rail-color) 65%, rgba(0, 0, 0, 0.25));
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__rail::before,
+    #shopify-section-{{ section.id }} .clothing-rack__rail::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--rack-rail-color);
+      transform: translateY(-50%);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__rail::before { left: -2px; }
+    #shopify-section-{{ section.id }} .clothing-rack__rail::after { right: -2px; }
+
+    #shopify-section-{{ section.id }} .clothing-rack__track {
+      display: flex;
+      align-items: flex-start;
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      cursor: grab;
+      user-select: none;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__track.is-dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__spacer {
+      flex: 0 0 calc(50% - (var(--rack-item-width) / 2));
+    }
+
+    #shopify-section-{{ section.id }} .rack-item {
+      flex: 0 0 var(--rack-item-width);
+      scroll-snap-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 clamp(0.5rem, 1.5vw, 1.25rem);
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__hanger {
+      appearance: none;
+      background: none;
+      border: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+      transform: rotate(var(--rack-item-tilt, 0deg)) scale(var(--rack-item-scale, 0.92));
+      transform-origin: top center;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+      filter: brightness(0.94);
+    }
+
+    #shopify-section-{{ section.id }} .rack-item:nth-child(odd) .rack-item__hanger {
+      --rack-item-tilt: -3deg;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item:nth-child(even) .rack-item__hanger {
+      --rack-item-tilt: 3deg;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item.is-active .rack-item__hanger {
+      --rack-item-tilt: 0deg;
+      --rack-item-scale: 1.15;
+      filter: brightness(1);
+      z-index: 2;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__hook {
+      width: 2px;
+      height: 16px;
+      background: #6b4a2f;
+      border-radius: 1px;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__hook::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 10px;
+      margin: -2px auto 0;
+      border: 2px solid #6b4a2f;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__image-wrapper {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__image-wrapper img,
+    #shopify-section-{{ section.id }} .rack-item__image-wrapper svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__caption {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      width: max-content;
+      max-width: 90vw;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__caption.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack-marquee {
+      overflow: hidden;
+      background: var(--rack-marquee-bg);
+      color: var(--rack-marquee-color);
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack-marquee__track {
+      display: flex;
+      width: max-content;
+      gap: 2rem;
+      white-space: nowrap;
+      animation: clothing-rack-marquee-{{ section.id }} var(--rack-marquee-duration) linear infinite;
+      padding: 0.6em 0;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack-marquee__item {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+    }
+
+    @keyframes clothing-rack-marquee-{{ section.id }} {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-50%, 0, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .clothing-rack-marquee__track {
+        animation: none;
+      }
+    }
+  </style>
+
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="clothing-rack">
+      {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+        <div class="container container--xl">
+          {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.heading -%}
+        </div>
+      {%- endif -%}
+
+      <div class="clothing-rack__stage">
+        <div class="clothing-rack__rail" aria-hidden="true"></div>
+
+        <div class="clothing-rack__track" data-rack-track tabindex="0" role="region" aria-label="{{ collection.title | escape }}">
+          <div class="clothing-rack__spacer" aria-hidden="true"></div>
+
+          {%- for product in collection.products limit: products_to_show -%}
+            <div class="rack-item {% if forloop.first %}is-active{% endif %}" data-rack-item>
+              <button type="button" class="rack-item__hanger" data-rack-trigger aria-label="{{ product.title | escape }}">
+                <span class="rack-item__hook" aria-hidden="true"></span>
+                <span class="rack-item__image-wrapper">
+                  {%- if product.featured_image != blank -%}
+                    {{- product.featured_image | image_url: width: product.featured_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px' -}}
+                  {%- else -%}
+                    {{- 'product-1' | placeholder_svg_tag -}}
+                  {%- endif -%}
+                </span>
+              </button>
+            </div>
+          {%- endfor -%}
+
+          <div class="clothing-rack__spacer" aria-hidden="true"></div>
+        </div>
+
+        {%- for product in collection.products limit: products_to_show -%}
+          <div class="clothing-rack__caption {% if forloop.first %}is-active{% endif %}" data-rack-caption>
+            <p class="h6">{{ product.title }}</p>
+            {%- render 'price-list', product: product, context: 'card' -%}
+            <div data-rack-cta>
+              {%- render 'button', href: product.url, content: section.settings.cta_text, style: 'outline' -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.show_marquee and section.settings.marquee_text != blank -%}
+        <div class="clothing-rack-marquee">
+          <div class="clothing-rack-marquee__track">
+            {%- for i in (1..2) -%}
+              <p class="clothing-rack-marquee__item" {% unless forloop.first %}aria-hidden="true"{% endunless %}>{{ section.settings.marquee_text }}</p>
+              <p class="clothing-rack-marquee__item" aria-hidden="true">{{ section.settings.marquee_text }}</p>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+
+      const track = root.querySelector('[data-rack-track]');
+      if (!track) return;
+
+      const items = Array.from(root.querySelectorAll('[data-rack-item]'));
+      const captions = Array.from(root.querySelectorAll('[data-rack-caption]'));
+
+      const setActive = (index) => {
+        items.forEach((item, i) => item.classList.toggle('is-active', i === index));
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const index = items.indexOf(entry.target);
+              if (index !== -1) setActive(index);
+            }
+          });
+        },
+        { root: track, rootMargin: '0px -50% 0px -50%', threshold: 0 }
+      );
+
+      items.forEach((item) => observer.observe(item));
+
+      items.forEach((item, index) => {
+        const trigger = item.querySelector('[data-rack-trigger]');
+        if (!trigger) return;
+        trigger.addEventListener('click', () => {
+          item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          setActive(index);
+        });
+      });
+
+      track.addEventListener(
+        'wheel',
+        (event) => {
+          if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+          track.scrollLeft += event.deltaY;
+          event.preventDefault();
+        },
+        { passive: false }
+      );
+
+      let isDragging = false;
+      let dragStartX = 0;
+      let scrollStartLeft = 0;
+
+      track.addEventListener('pointerdown', (event) => {
+        isDragging = true;
+        dragStartX = event.clientX;
+        scrollStartLeft = track.scrollLeft;
+        track.classList.add('is-dragging');
+        track.setPointerCapture(event.pointerId);
+      });
+
+      track.addEventListener('pointermove', (event) => {
+        if (!isDragging) return;
+        track.scrollLeft = scrollStartLeft - (event.clientX - dragStartX);
+      });
+
+      const endDrag = (event) => {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('is-dragging');
+        if (event.pointerId !== undefined) {
+          try { track.releasePointerCapture(event.pointerId); } catch (e) {}
+        }
+      };
+
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+      track.addEventListener('pointerleave', endDrag);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Clothing rack",
+  "class": "shopify-section--clothing-rack",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": false
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "t:global.text.subheading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:global.text.heading"
+    },
+    {
+      "type": "header",
+      "content": "Rack"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "color",
+      "id": "rail_color",
+      "label": "Rail color",
+      "default": "#b5b7ba"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button label",
+      "default": "See availability"
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show marquee",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Marquee text",
+      "default": "IT'S US, NEVER THEM  •  NEW DROPS  •  LAGOS  •"
+    },
+    {
+      "type": "color",
+      "id": "marquee_background",
+      "label": "Marquee background",
+      "default": "#39ff14"
+    },
+    {
+      "type": "color",
+      "id": "marquee_text_color",
+      "label": "Marquee text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Marquee speed",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "unit": "s",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clothing rack",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
