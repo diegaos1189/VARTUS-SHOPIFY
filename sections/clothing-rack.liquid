@@ -137,6 +137,7 @@
     }
 
     #shopify-section-{{ section.id }} .rack-item__image-wrapper {
+      position: relative;
       width: 100%;
       aspect-ratio: 3 / 4;
       overflow: hidden;
@@ -147,6 +148,57 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__image--back {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item__image--front {
+      transition: opacity 0.3s ease;
+    }
+
+    #shopify-section-{{ section.id }} [data-rack-view="back"] .rack-item__image--front {
+      opacity: 0;
+    }
+
+    #shopify-section-{{ section.id }} [data-rack-view="back"] .rack-item__image--back {
+      opacity: 1;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__view-toggle {
+      position: relative;
+      z-index: 3;
+      display: {% if section.settings.show_view_toggle %}inline-flex{% else %}none{% endif %};
+      margin: 0 auto clamp(1rem, 3vw, 2rem);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      gap: 4px;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__view-toggle-button {
+      appearance: none;
+      border: 0;
+      background: none;
+      padding: 0.4em 1.1em;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: inherit;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, background-color 0.2s ease;
+    }
+
+    #shopify-section-{{ section.id }} .clothing-rack__view-toggle-button.is-active {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.08);
     }
 
     #shopify-section-{{ section.id }} .clothing-rack__caption {
@@ -205,11 +257,20 @@
     }
   </style>
 
-  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}" data-rack-view="front">
     <div class="clothing-rack">
       {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
         <div class="container container--xl">
           {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.heading -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_view_toggle -%}
+        <div class="container container--xl">
+          <div class="clothing-rack__view-toggle" data-rack-view-toggle role="group" aria-label="{{ section.settings.front_label | escape }} / {{ section.settings.back_label | escape }}">
+            <button type="button" class="clothing-rack__view-toggle-button is-active" data-rack-view-button="front" aria-pressed="true">{{ section.settings.front_label }}</button>
+            <button type="button" class="clothing-rack__view-toggle-button" data-rack-view-button="back" aria-pressed="false">{{ section.settings.back_label }}</button>
+          </div>
         </div>
       {%- endif -%}
 
@@ -220,14 +281,22 @@
           <div class="clothing-rack__spacer" aria-hidden="true"></div>
 
           {%- for product in collection.products limit: products_to_show -%}
+            {%- liquid
+              assign front_image = product.images[0]
+              assign back_image = product.images[1] | default: front_image
+            -%}
             <div class="rack-item {% if forloop.first %}is-active{% endif %}" data-rack-item>
               <button type="button" class="rack-item__hanger" data-rack-trigger aria-label="{{ product.title | escape }}">
                 <span class="rack-item__hook" aria-hidden="true"></span>
                 <span class="rack-item__image-wrapper">
-                  {%- if product.featured_image != blank -%}
-                    {{- product.featured_image | image_url: width: product.featured_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px' -}}
+                  {%- if front_image != blank -%}
+                    {{- front_image | image_url: width: front_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', class: 'rack-item__image rack-item__image--front' -}}
                   {%- else -%}
-                    {{- 'product-1' | placeholder_svg_tag -}}
+                    {{- 'product-1' | placeholder_svg_tag: 'rack-item__image rack-item__image--front' -}}
+                  {%- endif -%}
+
+                  {%- if back_image != blank -%}
+                    {{- back_image | image_url: width: back_image.width | image_tag: loading: 'lazy', widths: '200,300,400,500,600', sizes: '(max-width: 749px) 30vw, 220px', class: 'rack-item__image rack-item__image--back' -}}
                   {%- endif -%}
                 </span>
               </button>
@@ -339,6 +408,21 @@
       track.addEventListener('pointerup', endDrag);
       track.addEventListener('pointercancel', endDrag);
       track.addEventListener('pointerleave', endDrag);
+
+      const viewRoot = root.querySelector('[data-rack-view]');
+      const viewButtons = Array.from(root.querySelectorAll('[data-rack-view-button]'));
+
+      viewButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const view = button.dataset.rackViewButton;
+          if (viewRoot) viewRoot.dataset.rackView = view;
+          viewButtons.forEach((btn) => {
+            const isActive = btn === button;
+            btn.classList.toggle('is-active', isActive);
+            btn.setAttribute('aria-pressed', isActive);
+          });
+        });
+      });
     })();
   </script>
 {%- endif -%}
@@ -403,6 +487,25 @@
       "id": "cta_text",
       "label": "Button label",
       "default": "See availability"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_toggle",
+      "label": "Show front/back toggle",
+      "info": "Uses the 1st product image as front and the 2nd as back. Upload transparent PNGs so they adapt to the rack.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "front_label",
+      "label": "Front label",
+      "default": "Front"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back label",
+      "default": "Back"
     },
     {
       "type": "header",
