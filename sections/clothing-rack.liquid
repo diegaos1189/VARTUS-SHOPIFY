@@ -211,6 +211,20 @@
       opacity: 1;
     }
 
+    {%- comment -%}
+      The scroll-centered item always reveals its front image, regardless
+      of the global front/back toggle or hover state — matching the
+      reference: idle garments stay in side pose, the centered one turns
+      to face forward.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .rack-item.is-active .rack-item__image--front {
+      opacity: 1;
+    }
+
+    #shopify-section-{{ section.id }} .rack-item.is-active .rack-item__image--back {
+      opacity: 0;
+    }
+
     #shopify-section-{{ section.id }} .clothing-rack__view-toggle {
       position: relative;
       z-index: 3;
